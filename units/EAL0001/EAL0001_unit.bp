@@ -352,7 +352,7 @@ UnitBlueprint {
             Icon = 'exles1',
             Name = 'Tech 2 Improved Engineering (T1)',
             NewBuildRate = 25,
-            NewHealth = 1800,
+            NewHealth = 1000,
             ProductionPerSecondEnergy = 380,
             ProductionPerSecondMass = 7,
             ShowBones = {
@@ -366,7 +366,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UAL0001',
             },
-            NewRegenRate = 30,
+            NewRegenRate = 10,
         },
         ImprovedEngineeringRemove = {
             BuildCostEnergy = 1,
@@ -392,7 +392,7 @@ UnitBlueprint {
             Name = 'Tech 3 Advanced Engineering (T2)',
             Prerequisite = 'ImprovedEngineering',
             NewBuildRate = 60,
-            NewHealth = 6000,
+            NewHealth = 1500,
             ProductionPerSecondEnergy = 1500,
             ProductionPerSecondMass = 9,
             Slot = 'LCH',
@@ -403,7 +403,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UAL0001',
             },
-            NewRegenRate = 30,
+            NewRegenRate = 15,
         },
         AdvancedEngineeringRemove = {
             BuildCostEnergy = 1,
@@ -427,7 +427,7 @@ UnitBlueprint {
             Name = 'Tech 4 EXPERIMENTAL Engineering (T3)',
             Prerequisite = 'AdvancedEngineering',
             NewBuildRate = 30,
-            NewHealth = 12000,
+            NewHealth = 3000,
             ProductionPerSecondEnergy = 4500,
             ProductionPerSecondMass = 18,
             Slot = 'LCH',
@@ -438,7 +438,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UAL0001',
             },
-            NewRegenRate = 140,
+            NewRegenRate = 20,
         },
         ExperimentalEngineeringRemove = {
             BuildCostEnergy = 1,
@@ -459,11 +459,11 @@ UnitBlueprint {
             BuildCostEnergy = 750000,
             BuildCostMass = 10050,
             BuildTime = 42300,
-            Icon = 'exles4',
+            Icon = 'exles3',
             Name = 'Tech X Paragon Engineering (T3)',
             Prerequisite = 'ExperimentalEngineering',
             NewBuildRate = 90,
-            NewHealth = 30000,
+            NewHealth = 4000,
             ProductionPerSecondEnergy = 7980,
             ProductionPerSecondMass = 34,
             ShowBones = {
@@ -479,7 +479,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UEL0001',
             },
-            NewRegenRate = 190,
+            NewRegenRate = 30,
         },
         ParagonEngineeringRemove = {
             BuildCostEnergy = 1,
@@ -496,6 +496,51 @@ UnitBlueprint {
                 'AdvancedEngineering',
                 'ExperimentalEngineering',
                 'ExperimentalEngineeringRemove',
+            },
+            Slot = 'LCH',
+        },
+       PortableParagon = {
+            BuildCostEnergy = 4000000,
+            BuildCostMass = 105000,
+            BuildTime = 87500,
+            Icon = 'exles5',
+            Name = 'Tech X Portable Paragon',
+            Prerequisite = 'ParagonEngineering',
+            ProductionPerSecondEnergy = 79980,
+            ProductionPerSecondMass = 649,
+			SpeedMod = 0.75,
+			HealthDecrease = 2500,
+			RegenRateDecrease = 15,
+            ShowBones = {
+                'Engineering_Suite',
+            },
+            Slot = 'LCH',
+            UpgradeEffectBones = {
+                'Left_Upgrade',
+                'Left_Upgrade_Muzzle',
+                'Left_Arm_Muzzle',
+                'Left_Arm_Barrel',
+            },
+            UpgradeUnitAmbientBones = {
+                'UEL0001',
+            },
+        },
+        PortableParagonRemove = {
+            BuildCostEnergy = 1,
+            BuildCostMass = 1,
+            BuildTime = 0.1,
+            HideBones = {
+                'Engineering_Suite',
+            },
+            Icon = 'exles5',
+            Name = 'Remove Engineering Suites',
+            Prerequisite = 'ParagonEngineering',
+            RemoveEnhancements = {
+                'ImprovedEngineering',
+                'AdvancedEngineering',
+                'ExperimentalEngineering',
+				'PortableParagon',
+                'PortableParagonRemove',
             },
             Slot = 'LCH',
         },

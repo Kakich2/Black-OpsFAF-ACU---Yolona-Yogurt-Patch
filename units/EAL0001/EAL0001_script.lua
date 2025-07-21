@@ -436,6 +436,76 @@ EAL0001 = Class(ACUUnit) {
             end
             self:AddBuildRestriction(categories.AEON * (categories.BUILTBYTIER2COMMANDER + categories.BUILTBYTIER3COMMANDER + categories.BUILTBYTIER4COMMANDER))
             self:SetProduction()
+        elseif enh == 'ParagonEngineering' then
+            self:SetProduction(bp)
+
+            if not Buffs['AEONACUT5BuildRate'] then
+                BuffBlueprint {
+                    Name = 'AEONACUT5BuildRate',
+                    DisplayName = 'AEONCUT5BuildRate',
+                    BuffType = 'ACUBUILDRATE',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        BuildRate = {
+                            Add =  bp.NewBuildRate,
+                            Mult = 1,
+                        },
+                        MaxHealth = {
+                            Add = bp.NewHealth,
+                            Mult = 1.0,
+                        },
+                        Regen = {
+                            Add = bp.NewRegenRate,
+                            Mult = 1.0,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'AEONACUT5BuildRate')
+        elseif enh == 'ParagonEngineeringRemove' then
+            if Buff.HasBuff(self, 'AEONACUT5BuildRate') then
+                Buff.RemoveBuff(self, 'AEONACUT5BuildRate')
+            end
+            self:AddBuildRestriction(categories.AEON * (categories.BUILTBYTIER2COMMANDER + categories.BUILTBYTIER3COMMANDER + categories.BUILTBYTIER4COMMANDER))
+            self:SetProduction()
+        elseif enh == 'PortableParagon' then
+            self:SetProduction(bp)
+
+            if not Buffs['AEONACUPortableParagonDebuff'] then
+                BuffBlueprint {
+                    Name = 'AEONACUPortableParagonDebuff',
+                    DisplayName = 'AEONCUPortableParagonDebuff',
+                    BuffType = 'ACUBUILDRATE',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        MaxHealth = {
+                            Add = -bp.HealthDecrease,
+                            Mult = 1.0,
+                        },
+                        Regen = {
+                            Add = -bp.RegenRateDecrease,
+                            Mult = 1.0,
+                        },
+                        MoveMult = {
+                            Add = 0,
+                            Mult = bp.SpeedMod,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'AEONACUPortableParagonDebuff')
+        elseif enh == 'ExperimentalEngineeringRemove' then
+            if Buff.HasBuff(self, 'AEONACUPortableParagonDebuff') then
+                Buff.RemoveBuff(self, 'AEONACUPortableParagonDebuff')
+            end
+            self:AddBuildRestriction(categories.AEON * (categories.BUILTBYTIER2COMMANDER + categories.BUILTBYTIER3COMMANDER + categories.BUILTBYTIER4COMMANDER))
+            self:SetProduction()			
+			
+			
+			
+			
         elseif enh == 'CombatEngineering' then
             self:RemoveBuildRestriction(categories.AEON * (categories.BUILTBYTIER2COMMANDER))
             self:updateBuildRestrictions()

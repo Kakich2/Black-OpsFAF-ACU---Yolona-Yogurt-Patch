@@ -395,7 +395,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UEL0001',
             },
-            NewRegenRate = 20,
+            NewRegenRate = 10,
         },
         ImprovedEngineeringRemove = {
             BuildCostEnergy = 1,
@@ -421,7 +421,7 @@ UnitBlueprint {
             Name = 'Tech 3 Advanced Engineering (T2)',
             Prerequisite = 'ImprovedEngineering',
             NewBuildRate = 60,
-            NewHealth = 7000,
+            NewHealth = 6000,
             ProductionPerSecondEnergy = 880,
             ProductionPerSecondMass = 6,
             ShowBones = {
@@ -437,7 +437,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UEL0001',
             },
-            NewRegenRate = 30,
+            NewRegenRate = 15,
         },
         AdvancedEngineeringRemove = {
             BuildCostEnergy = 1,
@@ -464,8 +464,8 @@ UnitBlueprint {
             Name = 'Tech 4 Experimental Engineering (T3)',
             Prerequisite = 'AdvancedEngineering',
             NewBuildRate = 30,
-            NewHealth = 12000,
-            ProductionPerSecondEnergy = 2980,
+            NewHealth = 8000,
+            ProductionPerSecondEnergy = 1980,
             ProductionPerSecondMass = 12,
             ShowBones = {
                 'Engineering_Suite',
@@ -480,7 +480,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UEL0001',
             },
-            NewRegenRate = 140,
+            NewRegenRate = 30,
         },
         ExperimentalEngineeringRemove = {
             BuildCostEnergy = 1,
@@ -508,8 +508,8 @@ UnitBlueprint {
             Name = 'Tech X Paragon Engineering (T3)',
             Prerequisite = 'ExperimentalEngineering',
             NewBuildRate = 90,
-            NewHealth = 30000,
-            ProductionPerSecondEnergy = 7980,
+            NewHealth = 10000,
+            ProductionPerSecondEnergy = 4980,
             ProductionPerSecondMass = 34,
             ShowBones = {
                 'Engineering_Suite',
@@ -524,7 +524,7 @@ UnitBlueprint {
             UpgradeUnitAmbientBones = {
                 'UEL0001',
             },
-            NewRegenRate = 190,
+            NewRegenRate = 60,
         },
         ParagonEngineeringRemove = {
             BuildCostEnergy = 1,

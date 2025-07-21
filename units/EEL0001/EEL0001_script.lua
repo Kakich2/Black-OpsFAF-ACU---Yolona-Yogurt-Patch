@@ -513,7 +513,7 @@ EEL0001 = Class(ACUUnit) {
                     Affects = {
                         BuildRate = {
                             Add =  bp.NewBuildRate,
-                            Mult = 1,
+                            Mult = 1.0,
                         },
                         MaxHealth = {
                             Add = bp.NewHealth,
@@ -570,6 +570,7 @@ EEL0001 = Class(ACUUnit) {
             self:SetProduction()
         elseif enh == 'ParagonEngineering' then
             self:SetProduction(bp)
+			
             if not Buffs['UEFACUT5BuildRate'] then
                 BuffBlueprint {
                     Name = 'UEFACUT5BuildRate',
@@ -600,6 +601,8 @@ EEL0001 = Class(ACUUnit) {
             end
             self:AddBuildRestriction(categories.UEF * (categories.BUILTBYTIER2COMMANDER + categories.BUILTBYTIER3COMMANDER + categories.BUILTBYTIER4COMMANDER))
             self:SetProduction()
+			
+			
         elseif enh == 'CombatEngineering' then
             self:RemoveBuildRestriction(categories.UEF * (categories.BUILTBYTIER2COMMANDER))
             self:updateBuildRestrictions()
