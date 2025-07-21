@@ -1,0 +1,6 @@
+V19 (21.Aug.2022)
+
+- Unit eal0001 (Aeon Armored Command Unit) Changed sizeX to 0.18
+- fixed missing unit.FactionCategory
+
+*************************************************************************************************************************************
