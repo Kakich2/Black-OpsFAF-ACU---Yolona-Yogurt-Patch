@@ -394,7 +394,7 @@ UnitBlueprint {
             NewBuildRate = 60,
             NewHealth = 1500,
             ProductionPerSecondEnergy = 1500,
-            ProductionPerSecondMass = 9,
+            ProductionPerSecondMass = 10,
             Slot = 'LCH',
             UpgradeEffectBones = {
                 'Left_Turret',
