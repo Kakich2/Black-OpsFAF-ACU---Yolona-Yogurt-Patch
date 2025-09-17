@@ -247,6 +247,24 @@ EEL0001 = Class(ACUUnit) {
             WaitSeconds(5)
         end
     end,
+	
+    ShieldEnhancementBuffThread = function(self, enh)
+        local bp = self:GetBlueprint().Enhancements[enh]
+        local buff
+
+        if enh == 'NavalDamageScanning' then
+            buff = 'ShipNanobotsACUUEFAura'
+        end
+
+        while not self.Dead do
+            local units = self:GetUnitsToBuff(bp)
+            for _,unit in units do
+                Buff.ApplyBuff(unit, buff)
+                unit:RequestRefreshUI()
+            end
+            WaitSeconds(5)
+        end
+    end,
 
     OnStartBuild = function(self, unitBeingBuilt, order)
         ACUUnit.OnStartBuild(self, unitBeingBuilt, order)
