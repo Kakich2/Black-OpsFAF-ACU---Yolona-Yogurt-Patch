@@ -229,6 +229,24 @@ EEL0001 = Class(ACUUnit) {
             WaitSeconds(5)
         end
     end,
+	
+    NavalRegenBuffThread = function(self, enh)
+        local bp = self:GetBlueprint().Enhancements[enh]
+        local buff
+
+        if enh == 'NavalDamageScanning' then
+            buff = 'ShipNanobotsACUUEFAura'
+        end
+
+        while not self.Dead do
+            local units = self:GetUnitsToBuff(bp)
+            for _,unit in units do
+                Buff.ApplyBuff(unit, buff)
+                unit:RequestRefreshUI()
+            end
+            WaitSeconds(5)
+        end
+    end,
 
     OnStartBuild = function(self, unitBeingBuilt, order)
         ACUUnit.OnStartBuild(self, unitBeingBuilt, order)
@@ -1042,6 +1060,75 @@ EEL0001 = Class(ACUUnit) {
             
             local wep = self:GetWeaponByLabel('RightZephyr')
             wep:AddDamageMod(bp.DamageMod)
+			
+		elseif enh == 'NavalDamageScanning' then
+            if not Buffs['UEFTorpHealth4'] then
+                BuffBlueprint {
+                    Name = 'UEFTorpHealth4',
+                    DisplayName = 'UEFTorpHealth4',
+                    BuffType = 'UEFTorpHealth',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        MaxHealth = {
+                            Add = bp.NewHealth,
+                            Mult = 1.0,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'UEFTorpHealth4')
+			
+            if not Buffs['ShipNanobotsACUUEFAura'] then
+                BuffBlueprint {
+                    Name = 'ShipNanobotsACUUEFAura',
+                    DisplayName = 'ShipNanobotsACUUEFAura',
+                    BuffType = 'COMMANDERAURA_NavalRegenAura',
+                    Stacks = 'STACKS',
+                    Duration = 5,
+                    Affects = {
+                        Regen = {
+                            Add = bp.ShipAuraRegenAdditive,
+                            Mult = 1.0,
+                        }
+                    },
+                }
+            end	
+			if self.RegenFieldFXBag then
+                for k, v in self.RegenFieldFXBag do
+                    v:Destroy()
+                end
+                self.RegenFieldFXBag = {}
+            end
+
+            if self.RegenThreadHandler then
+                KillThread(self.RegenThreadHandler)
+                self.RegenThreadHandler = nil
+            end
+			
+            self.RegenThreadHandler = self:ForkThread(self.NavalRegenBuffThread, enh)
+			    table.insert(self.RegenFieldFXBag, CreateAttachedEmitter(self, 'Torso', self:GetArmy(), '/effects/emitters/seraphim_regenerative_aura_01_emit.bp'))
+            
+        elseif enh == 'NavalDamageScanningRemove' then
+            if Buff.HasBuff(self, 'UEFTorpHealth4') then
+                Buff.RemoveBuff(self, 'UEFTorpHealth4')
+            end
+
+		    if self.RegenThreadHandler then
+                KillThread(self.RegenThreadHandler)
+                self.RegenThreadHandler = nil
+            end
+
+            if self.RegenFieldFXBag then
+                for k, v in self.RegenFieldFXBag do
+                    v:Destroy()
+                end
+                self.RegenFieldFXBag = {}
+            end
+
+            local torp = self:GetWeaponByLabel('TorpedoLauncher')
+            torp:AddDamageMod(bp.TorpDamageMod)
+
             
         -- AntiMatter Cannon
         

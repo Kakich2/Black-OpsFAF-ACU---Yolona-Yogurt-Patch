@@ -1020,6 +1020,52 @@ UnitBlueprint {
             },
             Slot = 'RCH',
         },
+        NavalDamageScanning = {
+            BuildCostEnergy = 800000,
+            BuildCostMass = 8000,
+            BuildTime = 30000,
+            Icon = 'exrtorp4',
+            Name = 'Naval Scanning',
+            Prerequisite = 'AdvancedWarheads',
+            NewHealth = 8000,
+            Radius = 20,
+			ShipAuraRegenAdditive = 110,
+			UnitCategory = 'NAVAL, NAVALCARRIER',
+            ShowBones = {
+                'Torpedo_Launcher',
+            },
+            Slot = 'RCH',
+            UpgradeEffectBones = {
+                'Right_Upgrade',
+                'Right_Upgrade_Muzzle',
+                'Right_Arm_Muzzle',
+                'Right_Arm_Barrel',
+            },
+            UpgradeUnitAmbientBones = {
+                'UEL0001',
+            },
+        },
+        NavalDamageScanningRemove = {
+            BuildCostEnergy = 1,
+            BuildCostMass = 1,
+            BuildTime = 0.1,
+            HideBones = {
+                'Torpedo_Launcher',
+            },
+            Icon = 'exrtorp4',
+            Name = 'Remove Cluster Launcher',
+            Prerequisite = 'NavalDamageScanning',
+            DamageMod = -200,
+            TorpDamageMod = -425,
+            RemoveEnhancements = {
+                'TorpedoLauncher',
+                'ImprovedReloader',
+                'AdvancedWarheads',
+				'NavalDamageScanning',
+                'NavalDamageScanningRemove',
+            },
+            Slot = 'RCH',
+        },
 		
         AntiMatterCannon = {
             BuildCostEnergy = 45000,
