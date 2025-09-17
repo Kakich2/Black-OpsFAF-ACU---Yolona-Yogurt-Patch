@@ -6,6 +6,7 @@
 
 local ACUUnit = import('/lua/defaultunits.lua').ACUUnit
 local AWeapons = import('/lua/aeonweapons.lua')
+local AIFMissileTacticalSerpentine02Weapon = AWeapons.AIFMissileTacticalSerpentine02Weapon
 local ADFDisruptorCannonWeapon = AWeapons.ADFDisruptorCannonWeapon
 local ADFOverchargeWeapon = AWeapons.ADFOverchargeWeapon
 local ADFChronoDampener = AWeapons.ADFChronoDampener
@@ -43,6 +44,9 @@ EAL0001 = Class(ACUUnit) {
         AntiMissile = Class(AAMWillOWisp) {},
         OverCharge = Class(ADFOverchargeWeapon) {},
         AutoOverCharge = Class(ADFOverchargeWeapon) {},
+		RocketStorm1 = Class(AIFMissileTacticalSerpentine02Weapon) {},
+		RocketStorm2 = Class(AIFMissileTacticalSerpentine02Weapon) {},
+		RocketStorm3 = Class(AIFMissileTacticalSerpentine02Weapon) {},
     },
 
     __init = function(self)
@@ -88,6 +92,9 @@ EAL0001 = Class(ACUUnit) {
         self:SetWeaponEnabledByLabel('QuantumMaelstrom', false)
         self:SetWeaponEnabledByLabel('AntiTorpedo', false)
         self:SetWeaponEnabledByLabel('AntiMissile', false)
+		self:SetWeaponEnabledByLabel('RocketStorm1', true)
+		self:SetWeaponEnabledByLabel('RocketStorm2', false)
+		self:SetWeaponEnabledByLabel('RocketStorm3', false)		
         		
 		self.RegenFieldFXBag = {}
     end,

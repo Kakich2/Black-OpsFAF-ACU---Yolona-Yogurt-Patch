@@ -148,6 +148,42 @@ ERL0001 = Class(ACUUnit) {
             WaitSeconds(5)
         end
     end,
+	
+    NavalRegenBuffThread = function(self, enh)
+        local bp = self:GetBlueprint().Enhancements[enh]
+        local buff
+
+        if enh == 'ShipNanobots' then
+            buff = 'ShipNanobotsACUCybranAura'
+        end
+
+        while not self.Dead do
+            local units = self:GetUnitsToBuff(bp)
+            for _,unit in units do
+                Buff.ApplyBuff(unit, buff)
+                unit:RequestRefreshUI()
+            end
+            WaitSeconds(5)
+        end
+    end,
+	
+    AirRegenBuffThread = function(self, enh)
+        local bp = self:GetBlueprint().Enhancements[enh]
+        local buff
+
+        if enh == 'AircraftRepairField' then
+            buff = 'AirNanobotsACUCybranAura'
+        end
+
+        while not self.Dead do
+            local units = self:GetUnitsToBuff(bp)
+            for _,unit in units do
+                Buff.ApplyBuff(unit, buff)
+                unit:RequestRefreshUI()
+            end
+            WaitSeconds(5)
+        end
+    end,
 
     -- New function to set up production numbers
     SetProduction = function(self, bp)
@@ -967,6 +1003,77 @@ ERL0001 = Class(ACUUnit) {
 
             local wep = self:GetWeaponByLabel('RightRipper')
             wep:AddDamageMod(bp.DamageMod)
+			
+        elseif enh == 'ShipNanobots' then
+            if not Buffs['CybranTorpHealth4'] then
+                BuffBlueprint {
+                    Name = 'CybranTorpHealth4',
+                    DisplayName = 'CybranTorpHealth4',
+                    BuffType = 'CybranTorpHealth',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        MaxHealth = {
+                            Add = bp.NewHealth,
+                            Mult = 1.0,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'CybranTorpHealth4')
+			
+            if not Buffs['ShipNanobotsACUCybranAura'] then
+                BuffBlueprint {
+                    Name = 'ShipNanobotsACUCybranAura',
+                    DisplayName = 'ShipNanobotsACUCybranAura',
+                    BuffType = 'COMMANDERAURA_NavalRegenAura',
+                    Stacks = 'STACKS',
+                    Duration = 5,
+                    Affects = {
+                        Regen = {
+                            Add = bp.ShipAuraRegenAdditive,
+                            Mult = 1.0,
+                        }
+                    },
+                }
+            end	
+			if self.RegenFieldFXBag then
+                for k, v in self.RegenFieldFXBag do
+                    v:Destroy()
+                end
+                self.RegenFieldFXBag = {}
+            end
+
+            if self.RegenThreadHandler then
+                KillThread(self.RegenThreadHandler)
+                self.RegenThreadHandler = nil
+            end
+			
+            self.RegenThreadHandler = self:ForkThread(self.NavalRegenBuffThread, enh)
+			    table.insert(self.RegenFieldFXBag, CreateAttachedEmitter(self, 'Torso', self:GetArmy(), '/effects/emitters/seraphim_regenerative_aura_01_emit.bp'))
+            
+        elseif enh == 'ShipNanobotsRemove' then
+            if Buff.HasBuff(self, 'CybranTorpHealth4') then
+                Buff.RemoveBuff(self, 'CybranTorpHealth4')
+            end
+
+		    if self.RegenThreadHandler then
+                KillThread(self.RegenThreadHandler)
+                self.RegenThreadHandler = nil
+            end
+
+            if self.RegenFieldFXBag then
+                for k, v in self.RegenFieldFXBag do
+                    v:Destroy()
+                end
+                self.RegenFieldFXBag = {}
+            end
+
+            local torp = self:GetWeaponByLabel('TorpedoLauncher')
+            torp:AddDamageMod(bp.TorpDamageMod)
+
+            local wep = self:GetWeaponByLabel('RightRipper')
+            wep:AddDamageMod(bp.DamageMod)
             
         -- EMP Array
 
@@ -1361,6 +1468,51 @@ ERL0001 = Class(ACUUnit) {
             if Buff.HasBuff(self, 'CybranAAHealth3') then
                 Buff.RemoveBuff(self, 'CybranAAHealth3')
             end
+		elseif enh == 'AircraftRepairField' then
+			
+            if not Buffs['AirNanobotsACUCybranAura'] then
+                BuffBlueprint {
+                    Name = 'AirNanobotsACUCybranAura',
+                    DisplayName = 'AirNanobotsACUCybranAura',
+                    BuffType = 'COMMANDERAURA_NavalRegenAura',
+                    Stacks = 'STACKS',
+                    Duration = 5,
+                    Affects = {
+                        Regen = {
+                            Add = bp.ShipAuraRegenAdditive,
+                            Mult = 1.0,
+                        }
+                    },
+                }
+            end	
+			if self.RegenFieldFXBag then
+                for k, v in self.RegenFieldFXBag do
+                    v:Destroy()
+                end
+                self.RegenFieldFXBag = {}
+            end
+
+            if self.RegenThreadHandler then
+                KillThread(self.RegenThreadHandler)
+                self.RegenThreadHandler = nil
+            end
+			
+            self.RegenThreadHandler = self:ForkThread(self.AirRegenBuffThread, enh)
+			    table.insert(self.RegenFieldFXBag, CreateAttachedEmitter(self, 'Torso', self:GetArmy(), '/effects/emitters/seraphim_regenerative_aura_01_emit.bp'))
+            
+        elseif enh == 'AircraftRepairFieldRemove' then
+		    if self.RegenThreadHandler then
+                KillThread(self.RegenThreadHandler)
+                self.RegenThreadHandler = nil
+            end
+
+            if self.RegenFieldFXBag then
+                for k, v in self.RegenFieldFXBag do
+                    v:Destroy()
+                end
+                self.RegenFieldFXBag = {}
+            end
+
         -- Armor System
             
         elseif enh == 'ArmorPlating' then

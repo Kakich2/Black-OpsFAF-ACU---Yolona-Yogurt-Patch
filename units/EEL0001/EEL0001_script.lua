@@ -103,9 +103,23 @@ EEL0001 = Class(ACUUnit) {
                 return proj
             end,
         },
+        TacFusionMissile = Class(TIFCruiseMissileLauncher) {
+             CreateProjectileAtMuzzle = function(self)
+                muzzle = self:GetBlueprint().RackBones[1].MuzzleBones[1]
+                self.slider = CreateSlider(self.unit, 'Back_MissilePack_B02', 0, 0, 0, 0.25, true)
+                self.slider:SetGoal(0, 0, 0.22)
+                WaitFor(self.slider)
+                local proj = TIFCruiseMissileLauncher.CreateProjectileAtMuzzle(self, muzzle)
+                self.slider:SetGoal(0, 0, 0)
+                WaitFor(self.slider)
+                self.slider:Destroy()
+
+                return proj
+            end,
+        },
 		Artillery = Class(TIFArtilleryWeapon) {},
-		ARTY2 = Class(TIFArtilleryWeapon) {},
-		ARTY3 = Class(TIFArtilleryWeapon) {},		
+		Artillery2 = Class(TIFArtilleryWeapon) {},
+		Artillery3 = Class(TIFArtilleryWeapon) {},		
     },
     
     __init = function(self)
@@ -165,10 +179,11 @@ EEL0001 = Class(ACUUnit) {
         self:SetWeaponEnabledByLabel('EnergyLance02', false)
         self:SetWeaponEnabledByLabel('TacMissile', false)
         self:SetWeaponEnabledByLabel('TacNukeMissile', false)
+		self:SetWeaponEnabledByLabel('TacFusionMissile', false)
         self:SetWeaponEnabledByLabel('DeathWeapon', false)
 		self:SetWeaponEnabledByLabel('Artillery', false)
-		self:SetWeaponEnabledByLabel('ARTY2', false)
-		self:SetWeaponEnabledByLabel('ARTY3', false)		
+		self:SetWeaponEnabledByLabel('Artillery2', false)
+		self:SetWeaponEnabledByLabel('Artillery3', false)		
 		
 		self.RegenFieldFXBag = {}
     end,
@@ -743,13 +758,13 @@ EEL0001 = Class(ACUUnit) {
                     Stacks = 'STACKS',
                     Duration = 5,
                     Affects = {
-                        MoveMult = {
+                        MaxHealth = {
                             Add = 0,
-                            Mult = bp.SpeedMod,
+                            Mult = bp.HealthMod,
                         },
-						RateOfFire = {
+						Damage = {
 							Add = 0,
-							Mult = 1 / bp.FireRateMod,
+							Mult = bp.DamageMod,
 						},
                     },
                 }
@@ -793,13 +808,13 @@ EEL0001 = Class(ACUUnit) {
                     Stacks = 'STACKS',
                     Duration = 5,
                     Affects = {
-                        MoveMult = {
+                        MaxHealth = {
                             Add = 0,
-                            Mult = bp.SpeedMod,
+                            Mult = bp.HealthMod,
                         },
-						RateOfFire = {
+						Damage = {
 							Add = 0,
-							Mult = 1 / bp.FireRateMod,
+							Mult = bp.DamageMod,
 						},
                     },
                 }
@@ -843,13 +858,13 @@ EEL0001 = Class(ACUUnit) {
                     Stacks = 'STACKS',
                     Duration = 5,
                     Affects = {
-                        MoveMult = {
+                        MaxHealth = {
                             Add = 0,
-                            Mult = bp.SpeedMod,
+                            Mult = bp.HealthMod,
                         },
-						RateOfFire = {
+						Damage = {
 							Add = 0,
-							Mult = 1 / bp.FireRateMod,
+							Mult = bp.DamageMod,
 						},
                     },
                 }
@@ -866,7 +881,7 @@ EEL0001 = Class(ACUUnit) {
                 self.RegenThreadHandler = nil
             end
             self.RegenThreadHandler = self:ForkThread(self.RegenBuffThread, enh)
-			            table.insert(self.RegenFieldFXBag, CreateAttachedEmitter(self, 'Torso', self:GetArmy(), '/effects/emitters/seraphim_regenerative_aura_01_emit.bp'))
+			            table.insert(self.R, CreateAttachedEmitter(self, 'Torso', self:GetArmy(), '/effects/emitters/seraphim_regenerative_aura_01_emit.bp'))
 		elseif enh == 'AuxillaryEngineeringRemove' then
 		    if self.RegenThreadHandler then
                 KillThread(self.RegenThreadHandler)
@@ -893,13 +908,13 @@ EEL0001 = Class(ACUUnit) {
                     Stacks = 'STACKS',
                     Duration = 5,
                     Affects = {
-                        MoveMult = {
+                        MaxHealth = {
                             Add = 0,
-                            Mult = bp.SpeedMod,
+                            Mult = bp.HealthMod,
                         },
-						RateOfFire = {
+						Damage = {
 							Add = 0,
-							Mult = 1 / bp.FireRateMod,
+							Mult = bp.DamageMod,
 						},
                     },
                 }
@@ -1440,13 +1455,11 @@ EEL0001 = Class(ACUUnit) {
             end
             Buff.ApplyBuff(self, 'UEFMissileHealth1')
 
-   --         self:SetWeaponEnabledByLabel('ClusterMissiles', true)
-			self:SetWeaponEnabledByLabel('Artillery', true)
-			self:SetWeaponEnabledByLabel('RightZephyr', false)
+			self:SetWeaponEnabledByLabel('ClusterMissiles', true)
             local cluster = self:GetWeaponByLabel('ClusterMissiles')
             cluster:ChangeMaxRadius(bp.ClusterMaxRadius)
 
-        --    self:SetPainterRange(enh, bp.ClusterMaxRadius, false)
+            self:SetPainterRange(enh, bp.ClusterMaxRadius, false)
 
             -- Get rid of the range on the missiles to show this weapon's
             local wep = self:GetWeaponByLabel('TacMissile')
@@ -1593,55 +1606,15 @@ EEL0001 = Class(ACUUnit) {
      --       local wep = self:GetWeaponByLabel('TacNukeMissile')
 	--		wep.ChangeProjectileBlueprint
 
-            
+            self:SetWeaponEnabledByLabel('TacNukeMissile', false)
+			self:SetWeaponEnabledByLabel('TacFusionMissile', true)
             -- Buff Cluster Missiles
             local cluster = self:GetWeaponByLabel('ClusterMissiles')
             cluster:AddDamageMod(bp.ClusterDamageMod)
 			cluster:ChangeRateOfFire(bp.ClusterFireRate)
+		end
         -- Pod Subsystems
-            
-        elseif enh == 'LeftPod' then
-            local location = self:GetPosition('AttachSpecial02')
-            local pod = CreateUnitHPR('UEA0001', self:GetArmy(), location[1], location[2], location[3], 0, 0, 0)
-            pod:SetParent(self, 'LeftPod')
-            pod:SetCreator(self)
-            self.Trash:Add(pod)
-            self.HasLeftPod = true
-            self.LeftPod = pod
-        elseif enh == 'RightPod' then
-            local location = self:GetPosition('AttachSpecial01')
-            local pod = CreateUnitHPR('UEA0001', self:GetArmy(), location[1], location[2], location[3], 0, 0, 0)
-            pod:SetParent(self, 'RightPod')
-            pod:SetCreator(self)
-            self.Trash:Add(pod)
-            self.HasRightPod = true
-            self.RightPod = pod
-        elseif enh == 'LeftPodRemove' or enh == 'RightPodRemove' then
-            if self.HasLeftPod == true then
-                self.HasLeftPod = false
-                if self.LeftPod and not self.LeftPod.Dead then
-                    self.LeftPod:Kill()
-                    self.LeftPod = nil
-                end
-                if self.RebuildingPod ~= nil then
-                    RemoveEconomyEvent(self, self.RebuildingPod)
-                    self.RebuildingPod = nil
-                end
-            end
-            if self.HasRightPod == true then
-                self.HasRightPod = false
-                if self.RightPod and not self.RightPod.Dead then
-                    self.RightPod:Kill()
-                    self.RightPod = nil
-                end
-                if self.RebuildingPod2 ~= nil then
-                    RemoveEconomyEvent(self, self.RebuildingPod2)
-                    self.RebuildingPod2 = nil
-                end
-            end
-            KillThread(self.RebuildThread)
-            KillThread(self.RebuildThread2)
-        end
+
         
         -- Remove prerequisites
         if not removal then
