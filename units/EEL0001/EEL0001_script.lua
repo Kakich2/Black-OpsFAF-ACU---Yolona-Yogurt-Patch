@@ -1638,9 +1638,102 @@ EEL0001 = Class(ACUUnit) {
             local cluster = self:GetWeaponByLabel('ClusterMissiles')
             cluster:AddDamageMod(bp.ClusterDamageMod)
 			cluster:ChangeRateOfFire(bp.ClusterFireRate)
-		end
-        -- Pod Subsystems
+        -- Strategic Artillery Subsystems
+        elseif enh == 'MassThruster' then
+            if not Buffs['UEFArtySpeedDebuff1'] then
+                BuffBlueprint {
+                    Name = 'UEFArtySpeedDebuff1',
+                    DisplayName = 'UEFArtySpeedDebuff1',
+                    BuffType = 'UEFArtySpeedDebuff',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        MoveMult = {
+                            Add = 0,
+                            Mult = bp.SpeedMod,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'UEFArtySpeedDebuff1')
 
+			self:SetWeaponEnabledByLabel('Artillery', true)
+
+            self:SetPainterRange(enh, 225, false)
+
+        elseif enh == 'MassThrusterRemove' then
+            if Buff.HasBuff(self, 'UEFArtySpeedDebuff1') then
+                Buff.RemoveBuff(self, 'UEFArtySpeedDebuff1')
+            end
+            
+            self:SetWeaponEnabledByLabel('Artillery', false)
+          
+            self:SetPainterRange(enh, 0, true)
+			
+        elseif enh == 'AccelerationArrays' then
+            if not Buffs['UEFArtySpeedDebuff2'] then
+                BuffBlueprint {
+                    Name = 'UEFArtySpeedDebuff2',
+                    DisplayName = 'UEFArtySpeedDebuff2',
+                    BuffType = 'UEFArtySpeedDebuff',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        MoveMult = {
+                            Add = 0,
+                            Mult = bp.SpeedMod,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'UEFArtySpeedDebuff2')
+
+			self:SetWeaponEnabledByLabel('Artillery', false)
+			self:SetWeaponEnabledByLabel('Artillery2', true)
+
+            self:SetPainterRange(enh, 400, false)
+
+        elseif enh == 'AccelerationArraysRemove' then
+            if Buff.HasBuff(self, 'UEFArtySpeedDebuff2') then
+                Buff.RemoveBuff(self, 'UEFArtySpeedDebuff2')
+            end
+            
+            self:SetWeaponEnabledByLabel('Artillery2', false)
+          
+            self:SetPainterRange(enh, 0, true)
+			
+        elseif enh == 'RecoilControl' then
+            if not Buffs['UEFArtySpeedDebuff3'] then
+                BuffBlueprint {
+                    Name = 'UEFArtySpeedDebuff3',
+                    DisplayName = 'UEFArtySpeedDebuff3',
+                    BuffType = 'UEFArtySpeedDebuff',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        MoveMult = {
+                            Add = 0,
+                            Mult = bp.SpeedMod,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'UEFArtySpeedDebuff3')
+
+			self:SetWeaponEnabledByLabel('Artillery2', false)
+			self:SetWeaponEnabledByLabel('Artillery3', true)
+
+            self:SetPainterRange(enh, 700, false)
+
+        elseif enh == 'RecoilControlRemove' then
+            if Buff.HasBuff(self, 'UEFArtySpeedDebuff3') then
+                Buff.RemoveBuff(self, 'UEFArtySpeedDebuff3')
+            end
+            
+            self:SetWeaponEnabledByLabel('Artillery3', false)
+          
+            self:SetPainterRange(enh, 0, true)
+		end
         
         -- Remove prerequisites
         if not removal then
