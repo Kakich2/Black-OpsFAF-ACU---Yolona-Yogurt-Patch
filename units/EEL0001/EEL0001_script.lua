@@ -1434,6 +1434,32 @@ EEL0001 = Class(ACUUnit) {
             self:SetWeaponEnabledByLabel('EnergyLance01', false)
             self:SetWeaponEnabledByLabel('EnergyLance02', false)
             self:RemoveCommandCap('RULEUCC_Teleport')
+        elseif enh == 'PlasteelArmor' then
+            if not Buffs['UEFIntelHealth4'] then
+                BuffBlueprint {
+                    Name = 'UEFIntelHealth4',
+                    DisplayName = 'UEFIntelHealth4',
+                    BuffType = 'UEFIntelHealth',
+                    Stacks = 'STACKS',
+                    Duration = -1,
+                    Affects = {
+                        MaxHealth = {
+                            Add = bp.NewHealth,
+                            Mult = 1.0,
+                        },
+                    },
+                }
+            end
+            Buff.ApplyBuff(self, 'UEFIntelHealth4')
+            
+        elseif enh == 'PlasteelArmorRemove' then
+            if Buff.HasBuff(self, 'UEFIntelHealth4') then
+                Buff.RemoveBuff(self, 'UEFIntelHealth4')
+            end
+            
+            self:SetWeaponEnabledByLabel('EnergyLance01', false)
+            self:SetWeaponEnabledByLabel('EnergyLance02', false)
+            self:RemoveCommandCap('RULEUCC_Teleport')
             
         -- Missile System
         
